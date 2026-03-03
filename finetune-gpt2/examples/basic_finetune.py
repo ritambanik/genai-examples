@@ -8,6 +8,8 @@ Uncomment and implement the sections as needed.
 # from transformers import GPT2Tokenizer, GPT2LMHeadModel, Trainer, TrainingArguments
 # from finetune_gpt2.data import prepare_dataset
 
+from finetune_gpt2.model import finetune_model
+
 
 def main():
     """Main training function."""
@@ -16,23 +18,13 @@ def main():
 
     # Configuration
     model_name = "gpt2"
-    train_file = "data/train.txt"
-    output_dir = "./output"
+    output_dir = "finetune-gpt2/output"
 
     print(f"Model: {model_name}")
-    print(f"Training data: {train_file}")
     print(f"Output directory: {output_dir}")
 
-    # TODO: Implement training logic
-    # 1. Load tokenizer and model
-    # 2. Prepare dataset
-    # 3. Configure training arguments
-    # 4. Initialize trainer
-    # 5. Train model
-    # 6. Save final model
-
-    print("\nTraining not yet implemented. See finetune_gpt2 package modules.")
-
+    # Fine-tune the model
+    finetune_model(output_dir=output_dir, model_name=model_name)
 
 if __name__ == "__main__":
     main()

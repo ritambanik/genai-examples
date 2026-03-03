@@ -11,6 +11,22 @@ import torch
 from transformers import Trainer, TrainingArguments
 from finetune_gpt2.data import prepare_dataset
 
+
+def create_output_dir_structure(output_dir: Union[str, Path]) -> Path:
+    """
+    Create the expected fine-tuning output directory structure.
+
+    Args:
+        output_dir: Base output directory path
+
+    Returns:
+        Resolved output directory as a Path object
+    """
+    base_dir = Path(output_dir)
+    for folder in ("data", "results", "logs"):
+        (base_dir / folder).mkdir(parents=True, exist_ok=True)
+    return base_dir
+
 def load_tokenizer_and_tokenize_dataset(
     model_name: str = "gpt2",
     dataset: Optional[DatasetDict] = None,
@@ -71,7 +87,7 @@ def finetune_model(
         Loaded model and tokenizer
     """
     
-    output_dir = Path(output_dir)
+    output_dir = create_output_dir_structure(output_dir)
     
     dataset = prepare_dataset(data_path=output_dir / "data")
     
