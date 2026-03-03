@@ -205,3 +205,17 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# GenAI / ML specific
+*.pt
+*.pth
+*.bin
+*.h5
+*.ckpt
+*.safetensors
+data/
+datasets/
+models/
+checkpoints/
+wandb/
+mlruns/
