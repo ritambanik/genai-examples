@@ -1,92 +1,91 @@
 # Fine-tune GPT-2
 
-This package provides examples and utilities for fine-tuning GPT-2 models on custom datasets.
+Utilities and examples for fine-tuning GPT-2 using Hugging Face `transformers` and `datasets`.
 
-## Features
+## What this package does
 
-- Data preprocessing and tokenization
-- Fine-tuning scripts with configurable hyperparameters
-- Model evaluation and inference utilities
-- Support for different GPT-2 model sizes (small, medium, large, xl)
+- Creates an output workspace (`data/`, `results/`, `logs/`)
+- Downloads and preprocesses a source PDF into train/validation text files
+- Builds a Hugging Face `DatasetDict` with `train` and `validation` splits
+- Tokenizes dataset splits and fine-tunes GPT-2 with `Trainer`
+- Saves the final model and tokenizer under `results/final_model`
 
 ## Installation
 
 ```bash
-# From the finetune-gpt2 directory
+# From this directory (finetune-gpt2)
 pip install -e .
 
-# Or with development dependencies
+# Optional: development tools
 pip install -e ".[dev]"
 ```
 
-## Quick Start
+## Quick start
 
-### Basic Fine-tuning
-
-```python
-from finetune_gpt2 import GPT2Trainer
-
-# Initialize trainer
-trainer = GPT2Trainer(
-    model_name="gpt2",
-    output_dir="./output",
-)
-
-# Fine-tune on your dataset
-trainer.train(
-    train_data="path/to/train.txt",
-    eval_data="path/to/eval.txt",
-    num_epochs=3,
-)
-```
-
-### Using the Command Line
+Run the example script:
 
 ```bash
-# Train a model
-python -m finetune_gpt2.train \
-    --model_name gpt2 \
-    --train_file data/train.txt \
-    --output_dir ./output \
-    --num_epochs 3
-
-# Generate text with fine-tuned model
-python -m finetune_gpt2.generate \
-    --model_path ./output/checkpoint-final \
-    --prompt "Once upon a time"
+python examples/basic_finetune.py
 ```
 
-## Project Structure
+The script currently uses:
 
+- `model_name="gpt2"`
+- `output_dir="finetune-gpt2/output"`
+
+You can also call the API directly:
+
+```python
+from finetune_gpt2.model import finetune_model
+
+model, tokenizer = finetune_model(
+    output_dir="finetune-gpt2/output",
+    model_name="gpt2",
+)
 ```
+
+## Training workflow
+
+`finetune_model(...)` in `finetune_gpt2/model.py` performs:
+
+1. Create directory structure: `output/data`, `output/results`, `output/logs`
+2. Build dataset via `prepare_dataset(...)` from `finetune_gpt2/data.py`
+3. Tokenize each split from the `DatasetDict` (`train`, `validation`)
+4. Train GPT-2 with `Trainer`
+5. Save artifacts to `output/results/final_model`
+
+## Output structure
+
+After a run, your output directory looks like:
+
+```text
+output/
+├── data/
+│   ├── document.pdf
+│   ├── train.txt
+│   └── validation.txt
+├── logs/
+└── results/
+    └── final_model/
+```
+
+## Project structure
+
+```text
 finetune-gpt2/
-├── finetune_gpt2/        # Main package
+├── examples/
+│   └── basic_finetune.py
+├── finetune_gpt2/
 │   ├── __init__.py
-│   ├── data.py           # Data loading and preprocessing
-│   ├── model.py          # Model initialization
-│   ├── trainer.py        # Training logic
-│   ├── generate.py       # Text generation
-│   └── utils.py          # Utility functions
-├── tests/                # Unit tests
-├── examples/             # Example scripts and notebooks
+│   ├── data.py
+│   └── model.py
+├── tests/
 ├── README.md
 └── pyproject.toml
 ```
 
-## Examples
+## Notes
 
-See the [examples/](examples/) directory for:
-- Jupyter notebooks with step-by-step tutorials
-- Sample datasets and preprocessing scripts
-- Advanced fine-tuning configurations
-
-## Requirements
-
-- Python 3.8+
-- PyTorch 2.0+
-- Transformers 4.30+
-- 8GB+ GPU memory (recommended for training)
-
-## License
-
-[Your chosen license]
+- GPU is used automatically when available.
+- `prepare_dataset(...)` currently downloads a default PDF source and generates text files automatically.
+- If dataset splits do not include a `text` column, tokenization raises a validation error.

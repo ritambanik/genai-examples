@@ -1,70 +1,52 @@
 # GenAI Examples
 
-A collection of practical generative AI use case examples, organized as separate packages.
+Monorepo for practical generative AI examples, with each use case implemented as a standalone Python package.
 
-## Project Structure
+## Repository layout
 
-This project uses a monorepo structure with individual packages for each use case:
-
-```
+```text
 genai-examples/
-├── finetune-gpt2/         # GPT-2 fine-tuning examples
-├── ...                    # Additional use cases
-├── pyproject.toml         # Root project configuration
+├── finetune-gpt2/         # GPT-2 fine-tuning example package
+├── pyproject.toml         # Root project metadata
 └── README.md
 ```
 
-## Available Packages
+## Current package
 
 ### finetune-gpt2
-Fine-tuning examples for GPT-2 models. See [finetune-gpt2/README.md](finetune-gpt2/README.md) for details.
 
-## Installation
+The `finetune-gpt2` package demonstrates a complete GPT-2 fine-tuning flow:
 
-### Development Setup
+- Create output directories (`data/`, `results/`, `logs/`)
+- Prepare train/validation data files
+- Build and tokenize a Hugging Face `DatasetDict`
+- Train with `transformers.Trainer`
+- Save model artifacts to `results/final_model`
 
-1. Clone the repository:
+See the package documentation: [finetune-gpt2/README.md](finetune-gpt2/README.md)
+
+## Setup
+
 ```bash
-git clone <repository-url>
-cd genai-examples
-```
-
-2. Install the root package with development dependencies:
-```bash
+# From repository root
 pip install -e ".[dev]"
-```
 
-3. Install individual packages:
-```bash
+# Install example package
 cd finetune-gpt2
 pip install -e .
 ```
 
-## Adding New Packages
+## Run the example
 
-To add a new use case package:
+```bash
+cd finetune-gpt2
+python examples/basic_finetune.py
+```
 
-1. Create a new directory under the root (e.g., `new-use-case/`)
-2. Set up the package structure with `pyproject.toml`, `README.md`, and source code
-3. Update this README to list the new package
+## Development commands
 
-## Development
-
-### Running Tests
 ```bash
 pytest
-```
-
-### Code Formatting
-```bash
 black .
-```
-
-### Linting
-```bash
 flake8 .
 ```
-
-## License
-
-[Your chosen license]
